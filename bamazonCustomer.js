@@ -1,12 +1,11 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
-const tto = require('terminal-table-output').create();
 
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'root',
-    port: 8889,
+    port: 3306,
     database: 'bamazon_db'
 });
 
@@ -50,17 +49,19 @@ function showItems() {
                 name: "quantity",
                 message: 'How many units would you like to purchase?'
             }]).then(function(data) {
-              
-              custQuan.push(data.quantity);
-                
+
+                custQuan.push(data.quantity);
+
                 if (data.quantity > quantity[0]) {
                     console.log('Insufficient quantity!' + '\n' + 'We only have ' + quantity[0] + ' units in stock'), goBack();
-                } else { finishTask(); }
-                
+                } else {
+                    finishTask();
+                }
+
 
                 function finishTask() {
 
-                    
+
                     let remaining = quantity[0] - data.quantity;
 
                     connection.query('UPDATE products SET stock_quantity = ' + remaining + ' WHERE id = ' + id[0], function(error, results, fields) {
@@ -77,7 +78,7 @@ function showItems() {
                     connection.query('INSERT INTO sales (product_id, quantity_purchased) VALUES (' + id[0] + ', ' + custQuan[0] + ')', function(error, results, fields) {
                         if (error) throw error;
                         connection.end();
-                        
+
                     });
 
 
@@ -89,13 +90,15 @@ function showItems() {
                         name: "yn",
                         message: 'Would you like to go back?',
                         choices: ["Choice A", new inquirer.Separator(), "choice B"]
-                        
-                    }]).then(function(data){
-                      if (data.yn == true){
-                        showItems();
-                      } else { console.log('Bye Bye, Come back soon!'), connection.end();  }
+
+                    }]).then(function(data) {
+                        if (data.yn == true) {
+                            showItems();
+                        } else {
+                            console.log('Bye Bye, Come back soon!'), connection.end();
+                        }
                     });
-                    
+
                 }
             });
 
