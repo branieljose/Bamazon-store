@@ -1,6 +1,8 @@
+//get npm packages ready
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 
+//connects to mysql database
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -9,8 +11,10 @@ const connection = mysql.createConnection({
     database: 'bamazon_db'
 })
 
+//starts connection
 connection.connect();
 
+//main function, triggers other function based on user's choice
 function startInt() {
     inquirer.prompt([{
         type: 'list',
@@ -23,13 +27,11 @@ function startInt() {
     }]).then(function(answers) {
         let command = parseInt(answers.options);
         if (command === 1) {
-            viewProducts( function(){
-            	goBack();
-            });
+            viewProducts();
             
         } else if (command === 2) {
             viewLow();
-            goBack();
+           
         } else if (command === 3) {
             add();
         } else if (command === 4) {
@@ -42,8 +44,8 @@ function startInt() {
 startInt();
 
 
-
-function viewProducts(callback) {
+//Displays all products listed  
+function viewProducts() {
 
     connection.query('SELECT * FROM products', function(error, results, fields) {
         if (error) throw error;
@@ -55,10 +57,10 @@ function viewProducts(callback) {
             );
         }
     });
-   callback();
+   
 }
-// viewProducts();
 
+//Displays all products with a stock quantity lower than 5
 function viewLow() {
     connection.query('SELECT * FROM products WHERE stock_quantity < 6', function(error, results, fields) {
         for (let i = 0; i < results.length; i++) {
@@ -72,8 +74,7 @@ function viewLow() {
 }
 
 
-//add inventory, allows manager to add more stock to items that already exist
-
+//Add inventory, allows manager to add more stock to items that already exist
 function add() {
 
     let id = [];
@@ -104,7 +105,7 @@ function add() {
                 let total = parseInt(data.quantity) + parseInt(currQuan[0]);
                 connection.query('UPDATE products SET stock_quantity = ' + total + ' WHERE id=' + id[0], function(error, results, fields) {
                     console.log('Quantity has been updated!');
-                });
+                        });
             });
 
         });
@@ -112,8 +113,7 @@ function add() {
 
 
 }
-// add();
-
+//Adds new item to database
 function addNew() {
 
     let modelNum = [];
@@ -124,7 +124,7 @@ function addNew() {
     inquirer.prompt([{
         type: 'input',
         name: 'm',
-        message: 'What\'s new\'s item model number?'
+        message: 'What\'s the new\'s item model number?'
     }]).then(function(data) {
         modelNum.push(data.m);
         inquirer.prompt([{
@@ -145,11 +145,11 @@ function addNew() {
                     message: 'How many units you\'d like to add?'
                 }]).then(function(data) {
                     stock.push(data.s);
-                    console.log(modelNum[0].toString());
+                    // console.log(modelNum[0].toString());
                     connection.query('INSERT INTO products (product_name, department_id, price, stock_quantity) VALUES (' + modelNum[0].toString() + ',' + department[0] + ',' + price[0] + ',' + stock[0] + ')', function(error, results, fields) {
                         if (error) throw error;
                         console.log('A new item has been added!');
-                    })
+                                })
                 });
 
             });
@@ -161,21 +161,3 @@ function addNew() {
 
 }
 
-function goBack() {
-
-	inquirer.prompt([{
-        type: 'list',
-        name: 'options',
-        message: 'blah',
-        choices: ['1. Go back'],
-        filter: function(val) {
-            return val.toLowerCase();
-        }
-    }]).then(function(answers) {
-        let command = parseInt(answers.options);
-        if (!command) {
-            startInt();
-        } 
-
-    });
-}

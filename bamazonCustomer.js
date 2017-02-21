@@ -1,3 +1,4 @@
+////get npm packages ready
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 
@@ -8,7 +9,7 @@ const connection = mysql.createConnection({
     port: 3306,
     database: 'bamazon_db'
 });
-
+//starts connection
 connection.connect();
 
 
