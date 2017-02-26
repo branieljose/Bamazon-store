@@ -1,4 +1,4 @@
-////get npm packages ready
+////gets npm packages ready
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 
@@ -62,7 +62,7 @@ function showItems() {
                     finishTask();
                 }
 
-
+                //updates stock quantity
                 function finishTask() {
 
                     let remaining = quantity[0] - data.quantity;
@@ -87,6 +87,7 @@ function showItems() {
 
                 }
 
+                
                 function goBack() {
                     inquirer.prompt([{
                         type: "confirm",

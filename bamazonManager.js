@@ -1,4 +1,4 @@
-//get npm packages ready
+//gets npm packages ready
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 
