@@ -12,7 +12,7 @@ const connection = mysql.createConnection({
 //starts connection
 connection.connect();
 
-
+//shows items available for sale
 function showItems() {
 
     connection.query('SELECT * FROM products', function(err, results, fields) {
@@ -26,7 +26,8 @@ function showItems() {
 
 
         }
-
+        
+        //Contains data needed for the following functions 
         let id = [];
         let quantity = [];
         let price = [];
@@ -37,6 +38,8 @@ function showItems() {
             name: "id",
             message: 'Welcome to Bamazon industrial!' + '\n' + "What's the id of the item you wish to buy?"
         }]).then(function(data) {
+           
+            //gets information about item chose
             connection.query('SELECT * FROM products WHERE id =' + data.id, function(error, results, fields) {
                 if (error) throw error;
                 id.push(data.id);
@@ -61,7 +64,6 @@ function showItems() {
 
 
                 function finishTask() {
-
 
                     let remaining = quantity[0] - data.quantity;
 
