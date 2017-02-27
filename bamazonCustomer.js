@@ -9,7 +9,7 @@ const connection = mysql.createConnection({
     port: 3306,
     database: 'bamazon_db'
 });
-//starts connection
+ //starts connection
 connection.connect();
 
 //shows items available for sale
